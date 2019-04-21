@@ -1,0 +1,140 @@
+function [cell]= CellInputGraphene(a)
+
+
+
+%parametar tight bindinga
+t = -2.74;
+
+%broj veza 
+Nl = 3;
+%broj mogucih skokova
+Nt = 3; 
+%broj atoma u jednoj celiji
+Na = 2;
+
+
+%inplane angle
+alfa = 2*pi/3;
+
+%duzina CC veze 
+acc = 0,142 * 10^-9;
+%vektori
+r1 = zeros(2,1);
+r2 = zeros(2,1);
+
+r1(1,1) = acc*sqrt(3);
+r2(2,1) = -acc*sqrt(3);
+
+%definisanje dimenzija vektora  
+atompos = zeros(2,Na);
+
+%pozicija atoma 
+
+atompos(1,1) = -acc;
+atompos(2,1) = acc;
+
+
+
+%nadalje rastojanje celije
+dNc1=1;
+dNc2=1;
+
+cell.Na=Na;
+cell.dNc1=dNc1;
+cell.dNc2=dNc2;
+
+
+cell.r1=zeros(2,1);
+cell.r2=zeros(2,1);
+%pozicija celije
+cell.r=0; %koordinatni pocetak
+cell.r1=r1; 
+cell.r2=r2;
+
+%------------------
+%Prvi atom
+
+%broj atoma u celiji
+na=1;
+%broj veza
+cell.atom(na).Nl=Nl;
+%broj tranzicija
+cell.atom(na).Nt=Nt;
+%pozicija
+cell.atom(na).r=atompos(:,na);
+
+cell.atom(na).t=zeros(Nt,1);
+%definisanje vrednosti za t
+cell.atom(na).tc1 = zeros(cell.atom(na).Nt,1); %pomeraj r1 vektora
+cell.atom(na).tc2 = zeros(cell.atom(na).Nt,1); %pomeraj r2 vektora
+cell.atom(na).ta = zeros(cell.atom(na).Nt,1); %atom na koga elektron skace
+
+%tdr-razlika kordinata
+cell.atom(na).tdr = zeros(3,cell.atom(na).Nt);
+
+%polozaj susednog atoma
+cell.atom(na).tr2 = zeros(3,cell.atom(na).Nt);
+
+%broj linkova
+cell.atom(na).tl = zeros(cell.atom(na).Nt,1);
+
+%definisanje okolnih atoma 
+%1. susedni atom
+nt = 1;
+
+cell.atom(na).t(nt) = t;
+cell.atom(na).tc1(nt) = -1;
+cell.atom(na).tc2(nt) = 0;
+cell.atom(na).ta(nt) = 2;
+%2.
+nt = 2; 
+cell.atom(na).t(nt) = t;
+cell.atom(na).tc1(nt) = 0;
+cell.atom(na).tc2(nt) = -1;
+cell.atom(na).ta(nt) = 2;
+%3.
+cell.atom(na).t(nt) = t;
+cell.atom(na).tc1(nt) = 0;
+cell.atom(na).tc2(nt) = 0;
+cell.atom(na).ta(nt) = 2;
+
+%---------------------------
+%drugi atom
+na=2;
+
+%osnovni parametri atoma u celiji
+cell.atom(na).Na = Na;
+cell.atom(na).Nl = Nl;
+cell.atom(na).Nt = Nt;
+cell.atom(na).r = atompos(:,na);
+
+cell.atom(na).tdr = zeros(3,cell.atom(na).Nt);
+
+cell.atom(na).tr2 = zeros(3,cell.atom(na).Nt);
+
+cell.atom(na).tl = zeros(cell.atom(na).Nt,1);
+
+%definisanje skoka elektrona
+cell.atom(na).t = zeros(cell.atom(na).Nt,1);
+cell.atom(na).tc1 = zeros (cell.atom(na).Nt,1);
+cell.atom(na).tc2 = zeros(cell.atom(na).Nt,1);
+cell.atom(na).ta = zeros(cell.atom(na).Nt,1);
+
+%definisanje susednih atoma
+%1.
+cell.atom(na).t(nt) = t;
+cell.atom(na).tc1(nt) = 0;
+cell.atom(na).tc2(nt) = 1;
+cell.atom(na).ta(nt) = 1;
+
+%2.
+cell.atom(na).t(nt) = t;
+cell.atom(na).tc1(nt) = 1;
+cell.atom(na).tc2(nt) = 0;
+cell.atom(na).ta(nt) = 1;
+
+%3.
+cell.atom(na).t(nt) = t;
+cell.atom(na).tc1(nt) = 0;
+cell.atom(na).tc2(nt) = 0;
+cell.atom(na).ta(nt) = 1;
